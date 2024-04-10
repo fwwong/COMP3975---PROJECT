@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Home from './components/Home';
 import Login from './components/auth/Login';
 import Dashboard from './components/Dashboard';
+import Admin from './components/Admin';
 
 function App() {
-  const isAuthenticated = localStorage.getItem('token'); // Adjust based on your auth logic
+  const isAuthenticated = localStorage.getItem('token');
+  const isAdmin = localStorage.getItem('isAdmin');
 
   return (
     <Router>
@@ -15,7 +17,12 @@ function App() {
         <Route
           path="/dashboard"
           element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />}
-        />        <Route path="/" Component={Home} />
+        />        
+        <Route path="/" Component={Home} />
+        <Route
+          path="/admin"
+          element={isAdmin ? <Admin /> : <Navigate replace to="/" />}
+        />
       </Routes>
     </Router>
   );

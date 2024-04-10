@@ -38,10 +38,12 @@ export default function Login() {
             const response = await axios.post(apiUrl, userData);
             const token = response.data.authorisation.token;
             const name = response.data.user.name;
-
+            const isAdmin = response.data.user.isAdmin;
             // IMPORTANT, use these for access areas and API calls that require authentication
             localStorage.setItem('token', token);
             localStorage.setItem('name', name);
+            localStorage.setItem('isAdmin', isAdmin);
+
             // console.log('Token:', token);
 
             // Redirect the user or perform other actions
