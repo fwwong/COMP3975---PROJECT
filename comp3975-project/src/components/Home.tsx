@@ -1,5 +1,7 @@
+import Footer from "./nav/Footer";
 import Navbar from "./nav/Navbar";
 import SearchBar from "./nav/SearchBar";
+import Tags from "./nav/Tags";
 
 export default function Home() {
   return (
@@ -15,8 +17,11 @@ export default function Home() {
       </div>
       <div className="bg-gray-900 py-10 text-center">
         <h1 className="text-2xl font-bold text-white">Search by Tags</h1>
-        {/* Add your popular search items here */}
       </div>
+      <div className="p-5">
+      <Tags />
+      </div>
+    <Footer />  
     </div>
   );
 }
