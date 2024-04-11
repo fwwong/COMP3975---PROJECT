@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from './nav/Navbar';
 
 // You can extend this interface if you plan to add more fields to your form
+
 interface ListingFormState {
   title: string;
   description: string;
   price: string;
-  category: string; // Renamed to match the expected backend payload
+  category: string; // Keeping as string, but ensure it matches backend expectations
 }
 
 const CreateListing: React.FC = () => {
@@ -15,35 +16,37 @@ const CreateListing: React.FC = () => {
     title: '',
     description: '',
     price: '',
-    category: '', // Default category_id can be an empty string or a default value
+    category: '',
   });
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const token = localStorage.getItem('token'); // Retrieve the token
 
     try {
       const response = await fetch('http://localhost:8888/api/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Include other headers as needed, for example, authorization headers
+          'Authorization': token ? `Bearer ${token}` : '', // Add the token to the request headers
         },
         body: JSON.stringify({
           title: formState.title,
           description: formState.description,
-          // Ensure to convert or pass the price if your backend expects it
-          category_id: formState.category,
+          category_id: formState.category, // Assuming your backend expects category_id
+          // price: formState.price,
         }),
       });
 
       if (!response.ok) {
+        // Handle response errors
         throw new Error('Failed to create the listing');
       }
 
-      // Handle success response, such as navigating to a different page or showing a success message
+      // Handle success response
       console.log('Listing created successfully');
-      navigate('/'); // Redirect to the homepage or another page
+      navigate('/'); // Redirect to the homepage or another page after success
     } catch (error) {
       console.error('Error creating listing:', error);
     }
@@ -53,6 +56,7 @@ const CreateListing: React.FC = () => {
     const { name, value } = e.target;
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
+
   return (
     <div>
       <Navbar />
