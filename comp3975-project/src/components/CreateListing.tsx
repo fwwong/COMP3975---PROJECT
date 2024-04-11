@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './nav/Navbar';
 
-// You can extend this interface if you plan to add more fields to your form
 interface ListingFormState {
   title: string;
   description: string;
   price: string;
-  category: string; // Renamed to match the expected backend payload
+  category: string;
+  image: File | null; // Add image field to store the selected file
 }
 
 const CreateListing: React.FC = () => {
@@ -15,37 +15,47 @@ const CreateListing: React.FC = () => {
     title: '',
     description: '',
     price: '',
-    category: '', // Default category_id can be an empty string or a default value
+    category: '',
+    image: null,
   });
   const navigate = useNavigate();
+  const [error, setError] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
+      // Create FormData object to send the form data including the image
+      const formData = new FormData();
+      formData.append('title', formState.title);
+      formData.append('description', formState.description);
+      formData.append('category_id', formState.category);
+      formData.append('price', formState.price);
+      if (formState.image) {
+        formData.append('image', formState.image);
+      }
+
       const response = await fetch('http://localhost:8888/api/posts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Include other headers as needed, for example, authorization headers
-        },
-        body: JSON.stringify({
-          title: formState.title,
-          description: formState.description,
-          // Ensure to convert or pass the price if your backend expects it
-          category_id: formState.category,
-        }),
+        body: formData,
       });
 
       if (!response.ok) {
         throw new Error('Failed to create the listing');
       }
 
-      // Handle success response, such as navigating to a different page or showing a success message
-      console.log('Listing created successfully');
-      navigate('/'); // Redirect to the homepage or another page
+      // Reset form state and navigate to homepage upon success
+      setFormState({
+        title: '',
+        description: '',
+        price: '',
+        category: '',
+        image: null,
+      });
+      navigate('/');
     } catch (error) {
       console.error('Error creating listing:', error);
+      setError('Failed to create the listing');
     }
   };
 
@@ -53,12 +63,19 @@ const CreateListing: React.FC = () => {
     const { name, value } = e.target;
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormState((prevState) => ({ ...prevState, image: file }));
+  };
+
   return (
     <div>
       <Navbar />
       <div className="max-w-4xl mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">Create a New Listing</h2>
         <form onSubmit={handleSubmit}>
+          {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-4">
             <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Title</label>
             <input
@@ -106,10 +123,24 @@ const CreateListing: React.FC = () => {
             >
               <option value="">Select a Category</option>
               <option value="Electronics">Electronics</option>
-              <option value="Furniture">Furniture</option>
-              <option value="Vehicles">Vehicles</option>
-              <option value="Services">Services</option>
+              <option value="Furniture">Fashion</option>
+              <option value="Vehicles">Home & Garden</option>
+              <option value="Services">Books</option>
+              <option value="Services">Toys & Games</option>
+              <option value="Services">Sports & Outdoors</option>
             </select>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">Image</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+            />
           </div>
           <div className="flex items-center justify-between">
             <button
@@ -121,11 +152,8 @@ const CreateListing: React.FC = () => {
           </div>
         </form>
       </div>
-      </div>
-        );
-    
+    </div>
+  );
 }
 
 export default CreateListing;
-
-

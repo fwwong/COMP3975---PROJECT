@@ -20,10 +20,13 @@ function App() {
         <Route path= "/profile" Component={ProfilePage}
         />
         <Route path="/login" Component={Login} />
-        <Route
-          path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />}
-        />        
+        <Route path="/dashboard"
+          
+          element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />
+          }
+        />
+      
+
         <Route path="/" Component={Home} />
         <Route
           path="/admin"
