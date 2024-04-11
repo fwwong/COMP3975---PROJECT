@@ -1,37 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export default function SearchBar() {
     const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate(); // Instantiate useNavigate
 
-    const handleSearch = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault(); // Prevent form submission from reloading the page
-        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
-        if (searchTerm.trim() === '') {
-            // Perform GET request if search term is empty
-            try {
-                const response = await fetch('http://localhost:8888/api/posts', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Include the Authorization header with the token
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                console.log(data); // Here, you'd handle displaying the fetched data
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            }
-        } else {
-            // Handle the case where there is a searchTerm provided
-            console.log(`Search for: ${searchTerm}`);
-            // Optionally, you could extend this to perform a search operation
-        }
+        // Navigate to the /results route with the searchTerm as a query parameter
+        navigate(`/results?term=${encodeURIComponent(searchTerm.trim())}`);
     };
 
     return (
@@ -52,4 +30,5 @@ export default function SearchBar() {
         </div>
     );
 }
+
 

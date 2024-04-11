@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './nav/Navbar';
 import SearchBar from './nav/SearchBar';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
@@ -13,13 +13,32 @@ interface Listing {
 }
 
 const MarketplaceResult: React.FC = () => {
-  // Dummy data for demonstration
-  const listings: Listing[] = [
-    { id: 1, title: 'Product 1', description: 'Description of Product 1', price: '$100' },
-    { id: 2, title: 'Product 2', description: 'Description of Product 2', price: '$150' },
-    { id: 3, title: 'Product 3', description: 'Description of Product 3', price: '$200' },
-    // Add more dummy listings as needed
-  ];
+  const [listings, setListings] = useState<Listing[]>([]);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await fetch('http://localhost:8888/api/posts', {
+          headers: {
+            'Content-Type': 'application/json',
+            // Include the Authorization header if your API requires authentication
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch listings');
+        }
+
+        const data = await response.json();
+        setListings(data); // Assuming the response data is in the format that matches the Listing[] type
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+      }
+    };
+
+    fetchListings();
+  }, []); // Empty dependency array means this effect runs once on mount
 
   return (
     <div>
@@ -29,7 +48,6 @@ const MarketplaceResult: React.FC = () => {
         <SearchBar />
         <Categories />
         <div className="max-w-4xl mx-auto p-4 grid grid-cols-3 gap-4">
-
           {listings.map(listing => (
             <div key={listing.id} className="border border-gray-200 rounded-lg p-4">
               <FontAwesomeIcon icon={faImage} className="text-4xl mx-auto mb-4" />
@@ -48,3 +66,4 @@ const MarketplaceResult: React.FC = () => {
 }
 
 export default MarketplaceResult;
+
