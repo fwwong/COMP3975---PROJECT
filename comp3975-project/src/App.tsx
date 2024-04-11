@@ -7,6 +7,9 @@ import Dashboard from './components/Dashboard';
 import Admin from './components/Admin';
 import ProfilePage from './components/ProfilePage';
 import CreateListing from './components/CreateListing';
+import MarketplaceResults from './components/Results';
+
+
 function App() {
   const isAuthenticated = localStorage.getItem('token');
   const isAdmin = localStorage.getItem('isAdmin');
@@ -26,7 +29,8 @@ function App() {
           }
         /> 
         {/* <Route path='/dashboard' Component={Dashboard} /> */}
-    
+        
+        <Route path="/results" Component={MarketplaceResults} />
         <Route path="/" Component={Home} />
         <Route
           path="/admin"
