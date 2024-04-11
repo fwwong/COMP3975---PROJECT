@@ -12,8 +12,7 @@ import MarketplaceResults from './components/Results';
 
 function App() {
   const isAuthenticated = localStorage.getItem('token');
-  const isAdmin = localStorage.getItem('isAdmin');
-
+  const isAdmin = localStorage.getItem('isAdmin') === 'true'
   return (
     <Router>
       {/* Define routes for Login and Home components */}
@@ -31,10 +30,18 @@ function App() {
         {/* <Route path='/dashboard' Component={Dashboard} /> */}
         
         <Route path="/results" Component={MarketplaceResults} />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate replace to="/dashboard" /> : <Login />}
+        />
+        <Route
+          path="/dashboard"
+          element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />}
+        />        
         <Route path="/" Component={Home} />
         <Route
           path="/admin"
-          element={isAdmin ? <Admin /> : <Navigate replace to="/" />}
+          element={isAdmin ? <Admin /> : <Navigate replace to={isAuthenticated ? "/dashboard" : "/login"} />}
         />
       </Routes>
     </Router>
