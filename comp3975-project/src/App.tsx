@@ -6,6 +6,7 @@ import Login from './components/auth/Login';
 import Dashboard from './components/Dashboard';
 import Admin from './components/Admin';
 import ProfilePage from './components/ProfilePage';
+import CreateListing from './components/CreateListing';
 function App() {
   const isAuthenticated = localStorage.getItem('token');
   const isAdmin = localStorage.getItem('isAdmin');
@@ -14,6 +15,8 @@ function App() {
     <Router>
       {/* Define routes for Login and Home components */}
       <Routes>
+        <Route path= "/create-listing" Component={CreateListing}
+        />
         <Route path= "/profile" Component={ProfilePage}
         />
         <Route path="/login" Component={Login} />
