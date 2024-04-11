@@ -24,7 +24,8 @@ function App() {
           
           element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />
           }
-        />
+        /> 
+        {/* <Route path='/dashboard' Component={Dashboard} /> */}
     
         <Route path="/" Component={Home} />
         <Route

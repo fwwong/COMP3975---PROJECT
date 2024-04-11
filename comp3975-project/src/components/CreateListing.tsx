@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './nav/Navbar';
+import Footer from './nav/Footer';
 
 interface ListingFormState {
   title: string;
@@ -74,7 +75,7 @@ const CreateListing: React.FC = () => {
     <div>
       <Navbar />
       <div className="max-w-4xl mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-4">Create a New Listing</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center p-5">Create a New Listing</h2>
         <form onSubmit={handleSubmit}>
           {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-4">
@@ -143,7 +144,7 @@ const CreateListing: React.FC = () => {
               required
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pt-3">
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -153,6 +154,7 @@ const CreateListing: React.FC = () => {
           </div>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }
