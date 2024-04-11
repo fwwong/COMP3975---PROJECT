@@ -8,7 +8,7 @@ import Admin from './components/Admin';
 import ProfilePage from './components/ProfilePage';
 import CreateListing from './components/CreateListing';
 import MarketplaceResults from './components/Results';
-
+import PostDetails from './components/PostDetails';
 
 function App() {
   const isAuthenticated = localStorage.getItem('token');
@@ -17,6 +17,7 @@ function App() {
     <Router>
       {/* Define routes for Login and Home components */}
       <Routes>
+      <Route path="/posts/:id" element={<PostDetails />} /> {/* Route for viewing post details */}
         <Route path= "/create-listing" Component={CreateListing}
         />
         <Route path= "/profile" Component={ProfilePage}
