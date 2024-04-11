@@ -41,6 +41,7 @@ const CreateListing: React.FC = () => {
       });
 
       if (!response.ok) {
+        // Handle response errors
         throw new Error('Failed to create the listing');
       }
 
