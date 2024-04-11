@@ -7,13 +7,15 @@ import Admin from './components/Admin';
 
 function App() {
   const isAuthenticated = localStorage.getItem('token');
-  const isAdmin = localStorage.getItem('isAdmin');
-
+  const isAdmin = localStorage.getItem('isAdmin') === 'true'
   return (
     <Router>
       {/* Define routes for Login and Home components */}
       <Routes>
-        <Route path="/login" Component={Login} />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate replace to="/dashboard" /> : <Login />}
+        />
         <Route
           path="/dashboard"
           element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />}
@@ -21,7 +23,7 @@ function App() {
         <Route path="/" Component={Home} />
         <Route
           path="/admin"
-          element={isAdmin ? <Admin /> : <Navigate replace to="/" />}
+          element={isAdmin ? <Admin /> : <Navigate replace to={isAuthenticated ? "/dashboard" : "/login"} />}
         />
       </Routes>
     </Router>
