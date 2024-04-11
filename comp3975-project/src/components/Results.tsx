@@ -4,6 +4,7 @@ import SearchBar from './nav/SearchBar';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Categories from './test_data/Categories';
+import { useNavigate } from 'react-router-dom';
 
 interface Listing {
   id: number;
@@ -14,7 +15,7 @@ interface Listing {
 
 const MarketplaceResult: React.FC = () => {
   const [listings, setListings] = useState<Listing[]>([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchListings = async () => {
       try {
@@ -40,6 +41,10 @@ const MarketplaceResult: React.FC = () => {
     fetchListings();
   }, []); // Empty dependency array means this effect runs once on mount
 
+  const viewDetails = (id: number) => {
+    navigate(`/posts/${id}`); // Navigate to the detail view of the clicked listing
+  };
+
   return (
     <div>
       <Navbar />
@@ -54,7 +59,10 @@ const MarketplaceResult: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">{listing.title}</h3>
               <p className="text-gray-600 mb-2">{listing.description}</p>
               <p className="text-blue-500 font-bold">{listing.price}</p>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 focus:outline-none focus:shadow-outline">
+              <button
+                onClick={() => viewDetails(listing.id)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 focus:outline-none focus:shadow-outline"
+              >
                 View Details
               </button>
             </div>
