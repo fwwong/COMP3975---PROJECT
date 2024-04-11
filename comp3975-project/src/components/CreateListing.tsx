@@ -6,8 +6,8 @@ import Navbar from './nav/Navbar';
 interface ListingFormState {
   title: string;
   description: string;
-  price: string; // Using string to easily handle the input field value
-  category: string; // Added category to our form state
+  price: string;
+  category: string; // Renamed to match the expected backend payload
 }
 
 const CreateListing: React.FC = () => {
@@ -15,21 +15,44 @@ const CreateListing: React.FC = () => {
     title: '',
     description: '',
     price: '',
-    category: '' // Default category can be an empty string or a default value
+    category: '', // Default category_id can be an empty string or a default value
   });
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formState);
-    navigate('/');
+
+    try {
+      const response = await fetch('http://localhost:8888/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include other headers as needed, for example, authorization headers
+        },
+        body: JSON.stringify({
+          title: formState.title,
+          description: formState.description,
+          // Ensure to convert or pass the price if your backend expects it
+          category_id: formState.category,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create the listing');
+      }
+
+      // Handle success response, such as navigating to a different page or showing a success message
+      console.log('Listing created successfully');
+      navigate('/'); // Redirect to the homepage or another page
+    } catch (error) {
+      console.error('Error creating listing:', error);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormState(prevState => ({ ...prevState, [name]: value }));
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
-
   return (
     <div>
       <Navbar />
