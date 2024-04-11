@@ -1,9 +1,14 @@
 import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/Home';
+import Navbar from './components/nav/Navbar';
 import Login from './components/auth/Login';
 import Dashboard from './components/Dashboard';
 import Admin from './components/Admin';
+import ProfilePage from './components/ProfilePage';
+import CreateListing from './components/CreateListing';
+import MarketplaceResults from './components/Results';
+
 
 function App() {
   const isAuthenticated = localStorage.getItem('token');
@@ -12,6 +17,19 @@ function App() {
     <Router>
       {/* Define routes for Login and Home components */}
       <Routes>
+        <Route path= "/create-listing" Component={CreateListing}
+        />
+        <Route path= "/profile" Component={ProfilePage}
+        />
+        <Route path="/login" Component={Login} />
+        <Route path="/dashboard"
+          
+          element={isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />
+          }
+        /> 
+        {/* <Route path='/dashboard' Component={Dashboard} /> */}
+        
+        <Route path="/results" Component={MarketplaceResults} />
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate replace to="/dashboard" /> : <Login />}
